@@ -1,17 +1,31 @@
 {
   "name": "cortexio",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Intelligent Resume Analysis Platform using LLM Pipelines",
+  "type": "module",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "ai",
+    "resume-analysis",
+    "llm",
+    "mern",
+    "career-platform"
+  ],
+  "author": "Omkar Zunje",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
