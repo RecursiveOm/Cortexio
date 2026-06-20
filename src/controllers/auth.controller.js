@@ -5,15 +5,23 @@ import User from "../models/user.model.js";
 import BlacklistToken from "../models/blacklist.model.js";
 
 
+const cookieOptions = {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    maxAge: 24 * 60 * 60 * 1000
+};
+
+
 /**
  * Registers a new Cortexio user.
  *
  * Workflow:
  * 1. Validate user input
  * 2. Check existing account
- * 3. Hash password
- * 4. Create user
- * 5. Generate authentication token
+ * 3. Hash password securely
+ * 4. Store user in database
+ * 5. Generate JWT session
  *
  * @route POST /api/auth/register
  * @access Public
@@ -53,10 +61,8 @@ const registerUser = async (req,res)=>{
         }
 
 
-        const hashedPassword = await bcrypt.hash(
-            password,
-            10
-        );
+        const hashedPassword =
+            await bcrypt.hash(password,10);
 
 
         const user = await User.create({
@@ -80,10 +86,7 @@ const registerUser = async (req,res)=>{
         res.cookie(
             "token",
             token,
-            {
-                httpOnly:true,
-                secure:false
-            }
+            cookieOptions
         );
 
 
@@ -111,12 +114,12 @@ const registerUser = async (req,res)=>{
 
 
 /**
- * Authenticates an existing Cortexio user.
+ * Authenticates existing users.
  *
  * Workflow:
- * 1. Verify email credentials
- * 2. Compare encrypted passwords
- * 3. Generate JWT session token
+ * 1. Verify credentials
+ * 2. Compare hashed password
+ * 3. Issue JWT session token
  *
  * @route POST /api/auth/login
  * @access Public
@@ -138,7 +141,8 @@ const loginUser = async(req,res)=>{
         }
 
 
-        const user = await User
+        const user =
+            await User
             .findOne({email})
             .select("+password");
 
@@ -154,10 +158,10 @@ const loginUser = async(req,res)=>{
 
 
         const isPasswordValid =
-        await bcrypt.compare(
-            password,
-            user.password
-        );
+            await bcrypt.compare(
+                password,
+                user.password
+            );
 
 
         if(!isPasswordValid){
@@ -169,7 +173,6 @@ const loginUser = async(req,res)=>{
 
         }
 
-        
 
         const token = jwt.sign(
             {
@@ -185,10 +188,7 @@ const loginUser = async(req,res)=>{
         res.cookie(
             "token",
             token,
-            {
-                httpOnly:true,
-                secure:false
-            }
+            cookieOptions
         );
 
 
@@ -214,13 +214,14 @@ const loginUser = async(req,res)=>{
 
 };
 
+
 /**
- * Logs out authenticated Cortexio users.
+ * Logs out authenticated users.
  *
  * Workflow:
- * 1. Extract JWT from cookies
- * 2. Store token in blacklist
- * 3. Clear authentication cookie
+ * 1. Extract JWT
+ * 2. Blacklist token
+ * 3. Clear cookie
  *
  * @route GET /api/auth/logout
  * @access Private
@@ -247,7 +248,13 @@ const logoutUser = async(req,res)=>{
         });
 
 
-        res.clearCookie("token");
+        res.clearCookie(
+            "token",
+            {
+                httpOnly:true,
+                sameSite:"lax"
+            }
+        );
 
 
         return res.status(200).json({
@@ -268,9 +275,32 @@ const logoutUser = async(req,res)=>{
 };
 
 
+/**
+ * Returns current authenticated user.
+ *
+ * User is provided by auth middleware.
+ *
+ * @route GET /api/auth/me
+ * @access Private
+ */
+const getMe = async(req,res)=>{
 
-export default{
+    return res.status(200).json({
+        success:true,
+        message:"User authenticated",
+        user:{
+            id:req.user._id,
+            username:req.user.username,
+            email:req.user.email
+        }
+    });
+
+};
+
+
+export default {
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    getMe
 };
