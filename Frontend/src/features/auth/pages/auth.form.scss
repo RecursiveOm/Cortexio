@@ -1,0 +1,135 @@
+@use "../../../style/button.scss";
+
+
+.auth-page {
+
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+
+.form-container {
+
+    width: 430px;
+
+    padding: 2.5rem;
+
+    background: rgba(255,255,255,0.05);
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+    border-radius: 18px;
+
+
+    .form-header {
+
+        text-align: center;
+
+        margin-bottom: 2rem;
+
+
+        h1 {
+
+            color: white;
+
+            font-size: 2rem;
+
+        }
+
+
+        p {
+
+            margin-top: .5rem;
+
+            color: #999;
+
+            font-size: .9rem;
+
+        }
+
+    }
+
+
+    form {
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 1.3rem;
+
+
+        .input-group {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: .5rem;
+
+
+            label {
+
+                color: #ddd;
+
+                font-size: .9rem;
+
+            }
+
+
+            input {
+
+                padding: 1rem;
+
+                background: #111;
+
+                border: 1px solid #333;
+
+                border-radius: 10px;
+
+                color: white;
+
+                outline: none;
+
+
+                &:focus {
+
+                    border-color: #7c3aed;
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+    .switch-text {
+
+        margin-top: 1.5rem;
+
+        text-align: center;
+
+        color: #aaa;
+
+
+        span {
+
+            margin-left: .4rem;
+
+            color: #8b5cf6;
+
+            cursor: pointer;
+
+            font-weight: 600;
+
+        }
+
+    }
+
+}
