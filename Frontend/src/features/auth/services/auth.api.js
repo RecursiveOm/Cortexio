@@ -110,7 +110,7 @@ export const getMe = async () => {
     try {
 
         const response = await api.get(
-            "/auth/me"
+            "/auth/get-me"
         );
 
 

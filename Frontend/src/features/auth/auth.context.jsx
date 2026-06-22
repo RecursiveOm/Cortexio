@@ -1,7 +1,14 @@
-import { createContext, useState } from "react";
+import {
+    createContext,
+    useState,
+    useEffect
+} from "react";
+
+import { getMe } from "./services/auth.api.js";
 
 
 export const AuthContext = createContext();
+
 
 
 export const AuthProvider = ({ children }) => {
@@ -9,7 +16,46 @@ export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+
+
+    useEffect(()=>{
+
+
+    const getAndSetUser = async()=>{
+
+        try{
+
+            console.log("checking user");
+
+            const data = await getMe();
+
+            console.log("USER DATA",data);
+
+            setUser(data.user);
+
+
+        }catch(err){
+
+            console.log("GET ME FAILED",err);
+
+            setUser(null);
+
+        }finally{
+
+            setLoading(false);
+
+        }
+
+    }
+
+
+    getAndSetUser();
+
+
+},[]);
+
 
 
     return (
@@ -17,18 +63,26 @@ export const AuthProvider = ({ children }) => {
         <AuthContext.Provider
 
             value={{
+
                 user,
+
                 setUser,
+
                 loading,
+
                 setLoading
+
             }}
 
         >
 
+
             {children}
+
 
         </AuthContext.Provider>
 
     );
+
 
 };
