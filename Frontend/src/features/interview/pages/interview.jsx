@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useInterview } from "../../hook/useInterview.js";
 import '../styles/interview.scss';
 
 const severityMeta = {
@@ -52,8 +53,14 @@ const Accordion = ({ question, intention, answer, index }) => {
     );
 };
 
-const Interview = ({ data }) => {
-    const [activeTab, setActiveTab] = useState('technical');
+const Interview = () => {
+    const [activeTab, setActiveTab] = useState("technical");
+    const { report, loading } = useInterview();
+
+    if (loading) return <h1>Loading...</h1>;
+    if (!report)  return <h1>No report found</h1>;
+
+    const data = report;
 
     const tabs = [
         { id: 'technical',  label: 'Technical' },
@@ -76,7 +83,7 @@ const Interview = ({ data }) => {
                     <h1 className="iv-title">{data.title}</h1>
                     <p className="iv-date">
                         {new Date(data.createdAt.$date).toLocaleDateString('en-US', {
-                            year: 'numeric', month: 'long', day: 'numeric'
+                            year: 'numeric', month: 'long', day: 'numeric',
                         })}
                     </p>
                 </div>
@@ -103,7 +110,6 @@ const Interview = ({ data }) => {
             {/* ─── Content ─── */}
             <main className="iv-content">
 
-                {/* Technical / Behavioral */}
                 {(activeTab === 'technical' || activeTab === 'behavioral') && (
                     <section className="questions-section">
                         <p className="section-meta">
@@ -121,7 +127,6 @@ const Interview = ({ data }) => {
                     </section>
                 )}
 
-                {/* Skill Gaps */}
                 {activeTab === 'gaps' && (
                     <section className="gaps-section">
                         <p className="section-meta">Areas identified for improvement</p>
@@ -151,7 +156,6 @@ const Interview = ({ data }) => {
                     </section>
                 )}
 
-                {/* Prep Plan */}
                 {activeTab === 'plan' && (
                     <section className="plan-section">
                         <p className="section-meta">Your structured preparation timeline</p>
