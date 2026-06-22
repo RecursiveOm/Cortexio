@@ -3,30 +3,25 @@ import Login from "./features/auth/pages/Login";
 import Register from "./features/auth/pages/Register";
 import Protected from "./features/Components/protected";
 import Home from "./features/interview/pages/Home";
-
+import Interview from "./features/interview/pages/interview";
 
 const router = createBrowserRouter([
-
     {
         path: "/",
-        element:<Protected><Home/></Protected>
+        element: <Protected><Home/></Protected>
     },
-
     {
         path: "/login",
-        element: <Login />
+        element: <Login/>
     },
-
     {
         path: "/register",
-        element: <Register />
+        element: <Register/>
     },
     {
-        path:"/interview/:interviewId",
-        element:<Protected> <Home/></Protected>
+        path: "/interview/:interviewId",
+        element: <Protected><Interview/></Protected>
     }
-
 ]);
-
 
 export default router;
